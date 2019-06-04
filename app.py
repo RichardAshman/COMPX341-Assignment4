@@ -32,9 +32,11 @@ def isPrime(inputNum):
     if (inputNum <= 1) : 
         return '{} is not prime.\n'.format(inputNum)
     if (inputNum <= 3) : 
-        cache.set("primeNo" + str(totalKeysStored), inputNum)
-        totalKeysStored += 1
-        return '{} is prime.\n'.format(inputNum)
+        if(cache.get("p" + str(inputNum)) is None) :
+            cache.set("p" + str(inputNum), inputNum)
+            cache.set("primeNo" + str(totalKeysStored), inputNum)
+            totalKeysStored += 1
+            return '{} is prime.\n'.format(inputNum)
   
     # www.geeksforgeeks.org/python-program-to-check-whether-a-number-is-prime-or-not/
     # This is checked so that we can skip middle five numbers in below loop 
@@ -47,8 +49,11 @@ def isPrime(inputNum):
             return '{} is not prime.\n'.format(inputNum)
         i = i + 6
     # store inputNum into Redis
-    cache.set("primeNo" + str(totalKeysStored), inputNum)
-    totalKeysStored += 1
+    # if("".join(map(chr, cache.get("p" + str(inputNum)))) is none) :
+    if(cache.get("p" + str(inputNum)) is None) :
+        cache.set("p" + str(inputNum), inputNum)
+        cache.set("primeNo" + str(totalKeysStored), inputNum)
+        totalKeysStored += 1
     return '{} is prime.\n'.format(inputNum)
 
 @app.route('/primesStored')
